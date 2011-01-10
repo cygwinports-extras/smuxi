@@ -1,0 +1,13 @@
+inherit mono gnome2
+
+DESCRIPTION="IRC client written in .NET"
+HOMEPAGE="http://www.smuxi.org/"
+SRC_URI="http://www.smuxi.org/jaws/data/files/${P}.tar.gz"
+
+PATCH_URI="
+	0.8-automake.patch
+	0.8-vpath.patch
+"
+
+ACLOCAL_FLAGS="-I ."
+MAKEOPTS+=" -j1"

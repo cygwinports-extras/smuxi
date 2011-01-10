@@ -1,0 +1,217 @@
+--- origsrc/smuxi-0.8/Makefile.include	2009-03-08 17:41:12.000000000 -0500
++++ src/smuxi-0.8/Makefile.include	2011-01-10 00:44:05.202552000 -0600
+@@ -23,7 +23,7 @@ build_resx_resources_hack = $(subst .res
+ build_resx_resources_embed = $(build_resx_resources_hack:%='-resource:%')
+ build_others_files = $(foreach res, $(build_others_list),$(call get_resource_name,$(res)))
+ build_others_resources = $(build_others_files)
+-build_others_resources_embed = $(build_others_list:%='-resource:$(srcdir)/%')
++build_others_resources_embed = $(build_others_list:%='-resource:%')
+ 
+ build_resources = $(build_resx_resources) $(build_others_resources)
+ build_resources_embed = $(build_resx_resources_embed) $(build_others_resources_embed)
+--- origsrc/smuxi-0.8/src/Common/Makefile.am	2010-09-01 19:48:15.000000000 -0500
++++ src/smuxi-0.8/src/Common/Makefile.am	2011-01-10 00:19:59.960798700 -0600
+@@ -46,7 +46,7 @@ LINUX_PKGCONFIG = \
+ all: $(ASSEMBLY) $(PROGRAMFILES) $(LINUX_PKGCONFIG) 
+ 
+ FILES = \
+-	$(top_srcdir)/src/AssemblyVersion.cs \
++	$(top_builddir)/src/AssemblyVersion.cs \
+ 	AssemblyInfo.cs \
+ 	Crc32.cs \
+ 	ITraceable.cs \
+--- origsrc/smuxi-0.8/src/Engine/Makefile.am	2010-09-01 19:48:15.000000000 -0500
++++ src/smuxi-0.8/src/Engine/Makefile.am	2011-01-10 00:19:39.426878000 -0600
+@@ -47,7 +47,7 @@ LINUX_PKGCONFIG = \
+ all: $(ASSEMBLY) $(PROGRAMFILES) $(LINUX_PKGCONFIG) 
+ 
+ FILES = \
+-	$(top_srcdir)/src/AssemblyVersion.cs \
++	$(top_builddir)/src/AssemblyVersion.cs \
+ 	AssemblyInfo.cs \
+ 	CommandModel.cs \
+ 	Engine.cs \
+--- origsrc/smuxi-0.8/src/Engine-IRC/Makefile.am	2010-09-01 19:48:15.000000000 -0500
++++ src/smuxi-0.8/src/Engine-IRC/Makefile.am	2011-01-10 00:20:59.394813600 -0600
+@@ -68,7 +68,7 @@ FILES = \
+ 	Protocols/Irc/IrcProtocolManager.cs \
+ 	Protocols/Irc/IrcPersonModel.cs \
+ 	Protocols/Irc/IrcTextColor.cs \
+-	$(top_srcdir)/src/AssemblyVersion.cs \
++	$(top_builddir)/src/AssemblyVersion.cs \
+ 	AssemblyInfo.cs 
+ 
+ DATA_FILES = 
+--- origsrc/smuxi-0.8/src/Engine-MSNP/Makefile.am	2009-03-08 17:41:12.000000000 -0500
++++ src/smuxi-0.8/src/Engine-MSNP/Makefile.am	2011-01-10 00:21:05.834903600 -0600
+@@ -64,7 +64,7 @@ LINUX_PKGCONFIG = \
+ all: $(ASSEMBLY) $(PROGRAMFILES) $(LINUX_PKGCONFIG) 
+ 
+ FILES = \
+-	$(top_srcdir)/src/AssemblyVersion.cs \
++	$(top_builddir)/src/AssemblyVersion.cs \
+ 	AssemblyInfo.cs \
+ 	Protocols/Msnp/MsnpProtocolManager.cs 
+ 
+--- origsrc/smuxi-0.8/src/Engine-OSCAR/Makefile.am	2009-03-08 17:41:12.000000000 -0500
++++ src/smuxi-0.8/src/Engine-OSCAR/Makefile.am	2011-01-10 00:21:10.739347900 -0600
+@@ -61,7 +61,7 @@ LINUX_PKGCONFIG = \
+ all: $(ASSEMBLY) $(PROGRAMFILES) $(LINUX_PKGCONFIG) 
+ 
+ FILES = \
+-	$(top_srcdir)/src/AssemblyVersion.cs \
++	$(top_builddir)/src/AssemblyVersion.cs \
+ 	AssemblyInfo.cs \
+ 	Protocols/Oscar/OscarProtocolManager.cs 
+ 
+--- origsrc/smuxi-0.8/src/Engine-Twitter/Makefile.am	2010-09-01 19:48:15.000000000 -0500
++++ src/smuxi-0.8/src/Engine-Twitter/Makefile.am	2011-01-10 00:30:35.322731900 -0600
+@@ -4,7 +4,7 @@ ASSEMBLY_FILENAME = $(ASSEMBLY_NAME).dll
+ ASSEMBLY_TARGET = $(TARGET_DIR)/$(ASSEMBLY_FILENAME)
+ #ASSEMBLY_PC = $(top_srcdir)/$(PACKAGE_NAME).pc
+ 
+-SOURCES =	$(top_srcdir)/src/AssemblyVersion.cs \
++SOURCES =	$(top_builddir)/src/AssemblyVersion.cs \
+ 		AssemblyInfo.cs \
+ 		Protocols/Twitter/TwitterProtocolManager.cs \
+ 		Protocols/Twitter/TwitterMessageBuilder.cs
+@@ -19,6 +19,11 @@ DLL_REFERENCES =	$(TARGET_DIR)/Twitteriz
+ 
+ SOURCES_BUILD = $(addprefix $(srcdir)/, $(SOURCES))
+ 
++PROGRAMFILES = \
++	$(SMUXI_ENGINE_DLL_MDB) \
++	$(SMUXI_ENGINE_DLL) \
++	$(SMUXI_COMMON_DLL)  
++
+ # automake magic variables
+ DIST_SOURCES = $(SOURCES_BUILD)
+ EXTRA_DIST =
+@@ -31,7 +36,7 @@ pkglib_DATA = $(ASSEMBLY_TARGET)
+ 
+ include $(top_srcdir)/Makefile.include
+ 
+-all: $(ASSEMBLY_TARGET)
++all: $(ASSEMBLY_TARGET) $(PROGRAMFILES)
+ 
+ $(ASSEMBLY_TARGET): $(SOURCES) $(DLL_REFERENCES)
+ 	$(MCS) $(CSC_FLAGS) $(build_references_ref) -target:library -out:$@ $(SOURCES_BUILD)
+--- origsrc/smuxi-0.8/src/Engine-XMPP/Makefile.am	2009-03-08 17:41:12.000000000 -0500
++++ src/smuxi-0.8/src/Engine-XMPP/Makefile.am	2011-01-10 00:21:26.597531100 -0600
+@@ -65,7 +65,7 @@ all: $(ASSEMBLY) $(PROGRAMFILES) $(LINUX
+ 
+ FILES = \
+ 	Protocols/Xmpp/XmppProtocolManager.cs \
+-	$(top_srcdir)/src/AssemblyVersion.cs \
++	$(top_builddir)/src/AssemblyVersion.cs \
+ 	AssemblyInfo.cs 
+ 
+ DATA_FILES = 
+--- origsrc/smuxi-0.8/src/Frontend/Makefile.am	2010-01-09 08:27:49.000000000 -0600
++++ src/smuxi-0.8/src/Frontend/Makefile.am	2011-01-10 00:21:32.828845800 -0600
+@@ -59,7 +59,7 @@ LINUX_PKGCONFIG = \
+ all: $(ASSEMBLY) $(PROGRAMFILES) $(LINUX_PKGCONFIG) 
+ 
+ FILES = \
+-	$(top_srcdir)/src/AssemblyVersion.cs \
++	$(top_builddir)/src/AssemblyVersion.cs \
+ 	AssemblyInfo.cs \
+ 	EntryController.cs \
+ 	EntryHistoryModel.cs \
+--- origsrc/smuxi-0.8/src/Frontend-Curses/Makefile.am	2009-03-08 17:41:12.000000000 -0500
++++ src/smuxi-0.8/src/Frontend-Curses/Makefile.am	2011-01-10 00:21:38.257945900 -0600
+@@ -74,7 +74,7 @@ all: $(ASSEMBLY) $(PROGRAMFILES) $(BINAR
+ 
+ FILES = \
+ 	Main.cs \
+-	$(top_srcdir)/src/AssemblyVersion.cs \
++	$(top_builddir)/src/AssemblyVersion.cs \
+ 	AssemblyInfo.cs \
+ 	Frontend.cs \
+ 	MainWindow.cs \
+--- origsrc/smuxi-0.8/src/Frontend-GNOME/Makefile.am	2010-09-01 19:48:15.000000000 -0500
++++ src/smuxi-0.8/src/Frontend-GNOME/Makefile.am	2011-01-10 00:45:12.001268800 -0600
+@@ -88,7 +88,7 @@ $(ICON):
+ 	cp $(top_srcdir)/images/icon.svg $(ICON)
+ 
+ FILES = \
+-	$(top_srcdir)/src/AssemblyVersion.cs \
++	$(top_builddir)/src/AssemblyVersion.cs \
+ 	AssemblyInfo.cs \
+ 	AboutDialog.cs \
+ 	CrashDialog.cs \
+@@ -150,7 +150,7 @@ DATA_FILES = \
+ 	$(DESKTOP_FILE)
+ 
+ RESOURCES = \
+-	gtk-gui/gui.stetic \
++	$(srcdir)/gtk-gui/gui.stetic \
+ 	$(top_srcdir)/glade/smuxi-frontend-gnome.glade \
+ 	$(top_srcdir)/images/connect-button.svg \
+ 	$(top_srcdir)/images/icon.svg \
+--- origsrc/smuxi-0.8/src/Frontend-GNOME-IRC/Makefile.am	2010-09-01 19:48:15.000000000 -0500
++++ src/smuxi-0.8/src/Frontend-GNOME-IRC/Makefile.am	2011-01-10 00:21:48.575232100 -0600
+@@ -85,7 +85,7 @@ LINUX_PKGCONFIG = \
+ all: $(ASSEMBLY) $(PROGRAMFILES) $(LINUX_PKGCONFIG) 
+ 
+ FILES = \
+-	$(top_srcdir)/src/AssemblyVersion.cs \
++	$(top_builddir)/src/AssemblyVersion.cs \
+ 	AssemblyInfo.cs \
+ 	IrcGroupChatView.cs \
+ 	IrcPersonChatView.cs \
+--- origsrc/smuxi-0.8/src/Frontend-GNOME-XMPP/Makefile.am	2009-03-08 17:41:12.000000000 -0500
++++ src/smuxi-0.8/src/Frontend-GNOME-XMPP/Makefile.am	2011-01-10 00:21:54.677896200 -0600
+@@ -84,7 +84,7 @@ LINUX_PKGCONFIG = \
+ all: $(ASSEMBLY) $(PROGRAMFILES) $(LINUX_PKGCONFIG) 
+ 
+ FILES = \
+-	$(top_srcdir)/src/AssemblyVersion.cs \
++	$(top_builddir)/src/AssemblyVersion.cs \
+ 	AssemblyInfo.cs 
+ 
+ DATA_FILES = 
+--- origsrc/smuxi-0.8/src/Frontend-STFL/Makefile.am	2010-04-24 14:30:40.000000000 -0500
++++ src/smuxi-0.8/src/Frontend-STFL/Makefile.am	2011-01-10 00:21:59.268830000 -0600
+@@ -74,7 +74,7 @@ all: $(ASSEMBLY) $(PROGRAMFILES) $(BINAR
+ 
+ FILES = \
+ 	Main.cs \
+-	$(top_srcdir)/src/AssemblyVersion.cs \
++	$(top_builddir)/src/AssemblyVersion.cs \
+ 	AssemblyInfo.cs \
+ 	Frontend.cs \
+ 	MainWindow.cs \
+--- origsrc/smuxi-0.8/src/Frontend-SWF/Makefile.am	2010-09-01 19:48:15.000000000 -0500
++++ src/smuxi-0.8/src/Frontend-SWF/Makefile.am	2011-01-10 00:22:03.394945500 -0600
+@@ -73,7 +73,7 @@ FILES = \
+ 	SplashScreenWindow.cs \
+ 	SplashScreenWindow.designer.cs \
+ 	NotImplementedMessageDialog.cs \
+-	$(top_srcdir)/src/AssemblyVersion.cs \
++	$(top_builddir)/src/AssemblyVersion.cs \
+ 	AssemblyInfo.cs \
+ 	MainWindow.Designer.cs \
+ 	MainWindow.cs \
+--- origsrc/smuxi-0.8/src/Frontend-Test/Makefile.am	2009-03-08 17:41:12.000000000 -0500
++++ src/smuxi-0.8/src/Frontend-Test/Makefile.am	2011-01-10 00:22:07.669526200 -0600
+@@ -61,7 +61,7 @@ BINARIES = \
+ all: $(ASSEMBLY) $(PROGRAMFILES) $(BINARIES) 
+ 
+ FILES = \
+-	$(top_srcdir)/src/AssemblyVersion.cs \
++	$(top_builddir)/src/AssemblyVersion.cs \
+ 	AssemblyInfo.cs \
+ 	Frontend.cs \
+ 	Main.cs \
+--- origsrc/smuxi-0.8/src/Server/Makefile.am	2009-03-08 17:41:12.000000000 -0500
++++ src/smuxi-0.8/src/Server/Makefile.am	2011-01-10 00:22:12.190776200 -0600
+@@ -65,7 +65,7 @@ BINARIES = \
+ all: $(ASSEMBLY) $(PROGRAMFILES) $(BINARIES) 
+ 
+ FILES = \
+-	$(top_srcdir)/src/AssemblyVersion.cs \
++	$(top_builddir)/src/AssemblyVersion.cs \
+ 	AssemblyInfo.cs \
+ 	Main.cs \
+ 	Server.cs 

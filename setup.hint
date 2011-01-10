@@ -1,0 +1,6 @@
+category: Net
+requires: mono mono-glade-sharp2.0 mono-glib-sharp2.0 mono-gtk-sharp2.0 mono-log4net1.2 mono-Nini1.1 mono-notify-sharp0.4 mono-pango-sharp2.0
+sdesc: "GTK+ IRC client written in .NET"
+ldesc: "Smuxi is an irssi-inspired, flexible, user-friendly and 
+cross-platform IRC client for sophisticated users, targeting the GNOME 
+desktop."
